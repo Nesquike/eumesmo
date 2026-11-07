@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- Metadados: encoding, responsividade, SEO e compartilhamento social -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portfólio de Seu Nome, Software Engineer. Projetos, experiência profissional, tech stack e contato.">
+  <meta name="author" content="Seu Nome">
+  <meta name="theme-color" content="#0f172a">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Seu Nome | Software Engineer">
+  <meta property="og:description" content="Projetos, experiência profissional e tech stack.">
+  <meta property="og:image" content="assets/images/og-cover.png">
+
+  <title>Seu Nome | Software Engineer</title>
+
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <!-- <link rel="stylesheet" href="css/main.css"> -->
+</head>
+
+<body class="page">
+
+  <!-- Skip link: permite a usuários de teclado/leitores de tela pular direto ao conteúdo -->
+  <a class="skip-link" href="#main-content">Pular para o conteúdo principal</a>
+
+  <!-- ============================================================
+       COMPONENTE: Header
+       Logo à esquerda + navegação principal à direita
+       ============================================================ -->
+  <header class="header" id="top">
+    <div class="header__container">
+      <a class="header__logo" href="#top" aria-label="Seu Nome — voltar ao início">
+        <span class="header__logo-text" aria-hidden="true">&lt;SN /&gt;</span>
+      </a>
+
+      <!-- Botão do menu mobile: aria-expanded deve ser alternado via JS -->
+      <button
+        class="header__menu-toggle"
+        type="button"
+        aria-controls="primary-navigation"
+        aria-expanded="false"
+        aria-label="Abrir menu de navegação">
+        <span class="header__menu-icon" aria-hidden="true"></span>
+      </button>
+
+      <nav class="nav" id="primary-navigation" aria-label="Navegação principal">
+        <ul class="nav__list">
+          <li class="nav__item"><a class="nav__link" href="#about">Sobre</a></li>
+          <li class="nav__item"><a class="nav__link" href="#skills">Skills</a></li>
+          <li class="nav__item"><a class="nav__link" href="#projects">Projetos</a></li>
+          <li class="nav__item"><a class="nav__link" href="#experience">Experiência</a></li>
+          <li class="nav__item"><a class="nav__link nav__link--highlight" href="#contact">Contato</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Conteúdo principal: único <main> da página, alvo do skip link -->
+  <main class="main" id="main-content" tabindex="-1">
+
+    <!-- ============================================================
+         COMPONENTE: Hero
+         Apresentação principal — contém o único <h1> da página
+         ============================================================ -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__container">
+        <div class="hero__content">
+          <p class="hero__greeting">Olá, eu sou</p>
+          <h1 class="hero__title" id="hero-title">
+            <span class="hero__name">Seu Nome</span>
+            <span class="hero__role">Software Engineer</span>
+          </h1>
+          <p class="hero__subtitle">
+            Construo aplicações web escaláveis, acessíveis e de alta performance,
+            com foco em código limpo e experiência do usuário.
+          </p>
+
+          <div class="hero__actions">
+            <a class="button button--primary" href="#projects">Ver Projetos</a>
+            <a
+              class="button button--secondary"
+              href="assets/docs/curriculo-seu-nome.pdf"
+              download
+              aria-label="Baixar currículo em PDF">
+              Baixar Currículo
+            </a>
+          </div>
+        </div>
+
+        <figure class="hero__media">
+          <img
+            class="hero__image"
+            src="assets/images/profile.webp"
+            alt="Foto de Seu Nome sorrindo, em ambiente de trabalho"
+            width="400"
+            height="400"
+            fetchpriority="high">
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         COMPONENTE: Sobre Mim
+         Biografia e resumo profissional
+         ============================================================ -->
+    <section class="section about" id="about" aria-labelledby="about-title">
+      <div class="section__container about__container">
+        <header class="section__header">
+          <h2 class="section__title" id="about-title">Sobre Mim</h2>
+        </header>
+
+        <div class="about__content">
+          <div class="about__text">
+            <p class="about__paragraph">
+              Sou Engenheiro de Software com X anos de experiência no desenvolvimento
+              de aplicações web, atuando do front-end ao back-end.
+            </p>
+            <p class="about__paragraph">
+              Tenho interesse especial em arquitetura de software, boas práticas de
+              Clean Code e acessibilidade digital.
+            </p>
+          </div>
+
+          <!-- Destaques numéricos em lista de definição (rótulo/valor) -->
+          <dl class="about__highlights">
+            <div class="about__highlight">
+              <dt class="about__highlight-label">Anos de experiência</dt>
+              <dd class="about__highlight-value">X+</dd>
+            </div>
+            <div class="about__highlight">
+              <dt class="about__highlight-label">Projetos entregues</dt>
+              <dd class="about__highlight-value">XX+</dd>
+            </div>
+            <div class="about__highlight">
+              <dt class="about__highlight-label">Localização</dt>
+              <dd class="about__highlight-value">Cidade, Brasil</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         COMPONENTE: Habilidades (Tech Stack)
+         Cada categoria é um <article> independente e reutilizável
+         ============================================================ -->
+    <section class="section skills" id="skills" aria-labelledby="skills-title">
+      <div class="section__container">
+        <header class="section__header">
+          <h2 class="section__title" id="skills-title">Habilidades</h2>
+          <p class="section__subtitle">Tecnologias e ferramentas que utilizo no dia a dia.</p>
+        </header>
+
+        <div class="skills__grid">
+          <!-- Categoria: Frontend -->
+          <article class="skills__category" aria-labelledby="skills-frontend-title">
+            <h3 class="skills__category-title" id="skills-frontend-title">Frontend</h3>
+            <ul class="skills__list">
+              <li class="skills__item">HTML5</li>
+              <li class="skills__item">CSS3</li>
+              <li class="skills__item">JavaScript</li>
+              <li class="skills__item">TypeScript</li>
+              <li class="skills__item">React</li>
+            </ul>
+          </article>
+
+          <!-- Categoria: Backend -->
+          <article class="skills__category" aria-labelledby="skills-backend-title">
+            <h3 class="skills__category-title" id="skills-backend-title">Backend</h3>
+            <ul class="skills__list">
+              <li class="skills__item">Node.js</li>
+              <li class="skills__item">Express</li>
+              <li class="skills__item">Python</li>
+              <li class="skills__item">REST APIs</li>
+            </ul>
+          </article>
+
+          <!-- Categoria: Banco de Dados -->
+          <article class="skills__category" aria-labelledby="skills-database-title">
+            <h3 class="skills__category-title" id="skills-database-title">Banco de Dados</h3>
+            <ul class="skills__list">
+              <li class="skills__item">PostgreSQL</li>
+              <li class="skills__item">MySQL</li>
+              <li class="skills__item">MongoDB</li>
+              <li class="skills__item">Redis</li>
+            </ul>
+          </article>
+
+          <!-- Categoria: Ferramentas -->
+          <article class="skills__category" aria-labelledby="skills-tools-title">
+            <h3 class="skills__category-title" id="skills-tools-title">Ferramentas</h3>
+            <ul class="skills__list">
+              <li class="skills__item">Git</li>
+              <li class="skills__item">Docker</li>
+              <li class="skills__item">CI/CD</li>
+              <li class="skills__item">Linux</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         COMPONENTE: Projetos em Destaque
+         Grid de cards; cada <article> é um card autocontido
+         ============================================================ -->
+    <section class="section projects" id="projects" aria-labelledby="projects-title">
+      <div class="section__container">
+        <header class="section__header">
+          <h2 class="section__title" id="projects-title">Projetos em Destaque</h2>
+          <p class="section__subtitle">Uma seleção de trabalhos recentes.</p>
+        </header>
+
+        <ul class="projects__grid">
+          <!-- Card de projeto (template base para componentização) -->
+          <li class="projects__grid-item">
+            <article class="project-card" aria-labelledby="project-1-title">
+              <figure class="project-card__media">
+                <img
+                  class="project-card__image"
+                  src="assets/images/projects/projeto-1.webp"
+                  alt="Tela inicial do Projeto Um exibindo o dashboard de métricas"
+                  width="640"
+                  height="360"
+                  loading="lazy">
+              </figure>
+
+              <div class="project-card__body">
+                <h3 class="project-card__title" id="project-1-title">Projeto Um</h3>
+                <p class="project-card__description">
+                  Breve descrição do problema resolvido, da solução e do impacto gerado.
+                </p>
+
+                <ul class="project-card__tags" aria-label="Tecnologias utilizadas">
+                  <li class="tag">React</li>
+                  <li class="tag">TypeScript</li>
+                  <li class="tag">Node.js</li>
+                </ul>
+              </div>
+
+              <footer class="project-card__footer">
+                <a
+                  class="project-card__link project-card__link--repo"
+                  href="https://github.com/usuario/projeto-1"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  Repositório<span class="visually-hidden"> do Projeto Um (abre em nova aba)</span>
+                </a>
+                <a
+                  class="project-card__link project-card__link--deploy"
+                  href="https://projeto-1.exemplo.com"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  Deploy<span class="visually-hidden"> do Projeto Um (abre em nova aba)</span>
+                </a>
+              </footer>
+            </article>
+          </li>
+
+          <li class="projects__grid-item">
+            <article class="project-card" aria-labelledby="project-2-title">
+              <figure class="project-card__media">
+                <img
+                  class="project-card__image"
+                  src="assets/images/projects/projeto-2.webp"
+                  alt="Interface do Projeto Dois mostrando a listagem de produtos"
+                  width="640"
+                  height="360"
+                  loading="lazy">
+              </figure>
+
+              <div class="project-card__body">
+                <h3 class="project-card__title" id="project-2-title">Projeto Dois</h3>
+                <p class="project-card__description">
+                  Breve descrição do problema resolvido, da solução e do impacto gerado.
+                </p>
+
+                <ul class="project-card__tags" aria-label="Tecnologias utilizadas">
+                  <li class="tag">Python</li>
+                  <li class="tag">PostgreSQL</li>
+                  <li class="tag">Docker</li>
+                </ul>
+              </div>
+
+              <footer class="project-card__footer">
+                <a
+                  class="project-card__link project-card__link--repo"
+                  href="https://github.com/usuario/projeto-2"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  Repositório<span class="visually-hidden"> do Projeto Dois (abre em nova aba)</span>
+                </a>
+                <a
+                  class="project-card__link project-card__link--deploy"
+                  href="https://projeto-2.exemplo.com"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  Deploy<span class="visually-hidden"> do Projeto Dois (abre em nova aba)</span>
+                </a>
+              </footer>
+            </article>
+          </li>
+
+          <li class="projects__grid-item">
+            <article class="project-card" aria-labelledby="project-3-title">
+              <figure class="project-card__media">
+                <img
+                  class="project-card__image"
+                  src="assets/images/projects/projeto-3.webp"
+                  alt="Aplicativo do Projeto Três em tela de celular com o fluxo de checkout"
+                  width="640"
+                  height="360"
+                  loading="lazy">
+              </figure>
+
+              <div class="project-card__body">
+                <h3 class="project-card__title" id="project-3-title">Projeto Três</h3>
+                <p class="project-card__description">
+                  Breve descrição do problema resolvido, da solução e do impacto gerado.
+                </p>
+
+                <ul class="project-card__tags" aria-label="Tecnologias utilizadas">
+                  <li class="tag">Next.js</li>
+                  <li class="tag">MongoDB</li>
+                  <li class="tag">Tailwind</li>
+                </ul>
+              </div>
+
+              <footer class="project-card__footer">
+                <a
+                  class="project-card__link project-card__link--repo"
+                  href="https://github.com/usuario/projeto-3"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  Repositório<span class="visually-hidden"> do Projeto Três (abre em nova aba)</span>
+                </a>
+                <a
+                  class="project-card__link project-card__link--deploy"
+                  href="https://projeto-3.exemplo.com"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  Deploy<span class="visually-hidden"> do Projeto Três (abre em nova aba)</span>
+                </a>
+              </footer>
+            </article>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         COMPONENTE: Experiência e Educação
+         Timeline em lista ordenada (ordem cronológica tem significado)
+         ============================================================ -->
+    <section class="section experience" id="experience" aria-labelledby="experience-title">
+      <div class="section__container">
+        <header class="section__header">
+          <h2 class="section__title" id="experience-title">Experiência e Educação</h2>
+        </header>
+
+        <div class="experience__groups">
+          <!-- Sub-bloco: Experiência profissional -->
+          <div class="experience__group">
+            <h3 class="experience__group-title">Experiência Profissional</h3>
+
+            <ol class="timeline" reversed>
+              <li class="timeline__item timeline__item--current">
+                <article class="timeline__card">
+                  <header class="timeline__header">
+                    <h4 class="timeline__title">Software Engineer</h4>
+                    <p class="timeline__organization">Empresa Atual</p>
+                    <p class="timeline__period">
+                      <time datetime="2023-01">jan. 2023</time> –
+                      <span>Atual</span>
+                    </p>
+                  </header>
+                  <ul class="timeline__achievements">
+                    <li class="timeline__achievement">Principal conquista ou responsabilidade.</li>
+                    <li class="timeline__achievement">Resultado mensurável (ex.: redução de X% no tempo de carregamento).</li>
+                  </ul>
+                </article>
+              </li>
+
+              <li class="timeline__item">
+                <article class="timeline__card">
+                  <header class="timeline__header">
+                    <h4 class="timeline__title">Desenvolvedor Júnior</h4>
+                    <p class="timeline__organization">Empresa Anterior</p>
+                    <p class="timeline__period">
+                      <time datetime="2021-03">mar. 2021</time> –
+                      <time datetime="2022-12">dez. 2022</time>
+                    </p>
+                  </header>
+                  <ul class="timeline__achievements">
+                    <li class="timeline__achievement">Principal conquista ou responsabilidade.</li>
+                  </ul>
+                </article>
+              </li>
+            </ol>
+          </div>
+
+          <!-- Sub-bloco: Formação acadêmica -->
+          <div class="experience__group">
+            <h3 class="experience__group-title">Educação</h3>
+
+            <ol class="timeline" reversed>
+              <li class="timeline__item">
+                <article class="timeline__card">
+                  <header class="timeline__header">
+                    <h4 class="timeline__title">Bacharelado em Ciência da Computação</h4>
+                    <p class="timeline__organization">Nome da Universidade</p>
+                    <p class="timeline__period">
+                      <time datetime="2017">2017</time> –
+                      <time datetime="2021">2021</time>
+                    </p>
+                  </header>
+                  <p class="timeline__description">Ênfase em engenharia de software e sistemas distribuídos.</p>
+                </article>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         COMPONENTE: Contato
+         Formulário + <aside> com links rápidos (conteúdo complementar)
+         ============================================================ -->
+    <section class="section contact" id="contact" aria-labelledby="contact-title">
+      <div class="section__container contact__container">
+        <header class="section__header">
+          <h2 class="section__title" id="contact-title">Contato</h2>
+          <p class="section__subtitle">Tem um projeto ou oportunidade? Vamos conversar.</p>
+        </header>
+
+        <div class="contact__content">
+          <!-- Formulário: cada campo com <label> associado e autocomplete -->
+          <form class="contact-form" action="#" method="post" aria-labelledby="contact-form-title" novalidate>
+            <h3 class="contact-form__title" id="contact-form-title">Envie uma mensagem</h3>
+            <p class="contact-form__hint" id="contact-form-hint">Campos marcados com * são obrigatórios.</p>
+
+            <div class="contact-form__field">
+              <label class="contact-form__label" for="contact-name">Nome *</label>
+              <input
+                class="contact-form__input"
+                type="text"
+                id="contact-name"
+                name="name"
+                autocomplete="name"
+                required
+                aria-describedby="contact-form-hint">
+            </div>
+
+            <div class="contact-form__field">
+              <label class="contact-form__label" for="contact-email">E-mail *</label>
+              <input
+                class="contact-form__input"
+                type="email"
+                id="contact-email"
+                name="email"
+                autocomplete="email"
+                required
+                aria-describedby="contact-form-hint contact-email-error">
+              <!-- Mensagem de erro: preenchida via JS na validação -->
+              <p class="contact-form__error" id="contact-email-error" aria-live="polite"></p>
+            </div>
+
+            <div class="contact-form__field">
+              <label class="contact-form__label" for="contact-subject">Assunto</label>
+              <input
+                class="contact-form__input"
+                type="text"
+                id="contact-subject"
+                name="subject">
+            </div>
+
+            <div class="contact-form__field">
+              <label class="contact-form__label" for="contact-message">Mensagem *</label>
+              <textarea
+                class="contact-form__input contact-form__input--textarea"
+                id="contact-message"
+                name="message"
+                rows="6"
+                required
+                aria-describedby="contact-form-hint"></textarea>
+            </div>
+
+            <button class="button button--primary contact-form__submit" type="submit">
+              Enviar mensagem
+            </button>
+
+            <!-- Região de status: anuncia sucesso/erro do envio para leitores de tela -->
+            <p class="contact-form__status" role="status" aria-live="polite"></p>
+          </form>
+
+          <!-- Links rápidos: conteúdo complementar ao formulário -->
+          <aside class="contact__aside" aria-labelledby="contact-links-title">
+            <h3 class="contact__aside-title" id="contact-links-title">Links rápidos</h3>
+            <address class="contact__address">
+              <ul class="contact__links">
+                <li class="contact__links-item">
+                  <a class="contact__link contact__link--email" href="mailto:seuemail@exemplo.com">
+                    seuemail@exemplo.com
+                  </a>
+                </li>
+                <li class="contact__links-item">
+                  <a
+                    class="contact__link contact__link--linkedin"
+                    href="https://www.linkedin.com/in/seu-usuario"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    LinkedIn<span class="visually-hidden"> (abre em nova aba)</span>
+                  </a>
+                </li>
+                <li class="contact__links-item">
+                  <a
+                    class="contact__link contact__link--github"
+                    href="https://github.com/seu-usuario"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    GitHub<span class="visually-hidden"> (abre em nova aba)</span>
+                  </a>
+                </li>
+              </ul>
+            </address>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       COMPONENTE: Footer
+       Direitos autorais + ícones de redes sociais
+       ============================================================ -->
+  <footer class="footer">
+    <div class="footer__container">
+      <p class="footer__copyright">
+        &copy; <time datetime="2026">2026</time> Seu Nome. Todos os direitos reservados.
+      </p>
+
+      <nav class="footer__social" aria-label="Redes sociais">
+        <ul class="footer__social-list">
+          <li class="footer__social-item">
+            <a
+              class="footer__social-link footer__social-link--linkedin"
+              href="https://www.linkedin.com/in/seu-usuario"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn (abre em nova aba)">
+              <!-- Ícone decorativo: o nome acessível vem do aria-label do link -->
+              <svg class="footer__social-icon" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/>
+              </svg>
+            </a>
+          </li>
+          <li class="footer__social-item">
+            <a
+              class="footer__social-link footer__social-link--github"
+              href="https://github.com/seu-usuario"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub (abre em nova aba)">
+              <svg class="footer__social-icon" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57v-2.23c-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22v3.29c0 .32.21.7.82.58A12 12 0 0 0 12 .3z"/>
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <a class="footer__back-to-top" href="#top">Voltar ao topo</a>
+    </div>
+  </footer>
+
+  <!-- <script src="js/main.js" defer></script> -->
+</body>
+</html>
