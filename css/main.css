@@ -787,6 +787,8 @@
     align-items: start;
   }
 
+
+
   /* Foto estilo "pôster colado no muro": P&B, moldura e fita adesiva */
   .about__media {
     position: relative;
@@ -824,6 +826,55 @@
   .about__body {
     display: grid;
     gap: var(--space-6);
+  }
+ /* ------------------------------------------------------------------------
+     Text note — trecho sublinhado que mostra uma nota (data-note) no hover/foco
+     ------------------------------------------------------------------------ */
+  .text-note {
+    position: relative;
+    text-decoration: underline dotted var(--color-text);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.3em;
+    cursor: help;
+  }
+
+  /* Caixa da nota: o texto vem do atributo data-note */
+  .text-note::after {
+    content: attr(data-note);
+    position: absolute;
+    inset-block-end: calc(100% + 0.75rem);
+    inset-inline-start: 50%;
+    z-index: 10;
+    inline-size: max-content;
+    max-inline-size: 16rem;
+    padding: var(--space-3) var(--space-4);
+    border: var(--border-width) solid var(--gray-950);
+    background-color: var(--gray-0);
+    color: var(--gray-950);
+    box-shadow: 4px 4px 0 var(--gray-950);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1.5;
+    text-align: start;
+    white-space: normal;
+    pointer-events: none;
+    opacity: 0;
+    translate: -50% 0.4rem;
+    rotate: -1.5deg; /* leve torto, como um bilhete colado */
+    transition:
+      opacity var(--duration-fast) ease,
+      translate var(--duration-base) var(--ease-out);
+  }
+
+  .text-note:hover::after,
+  .text-note:focus-visible::after {
+    opacity: 1;
+    translate: -50% 0;
+  }
+
+  .text-note:hover,
+  .text-note:focus-visible {
+    text-decoration-style: solid;
   }
 
 
