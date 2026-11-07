@@ -494,16 +494,60 @@
     font-size: var(--text-lg);
     font-weight: var(--weight-bold);
     text-decoration: none;
+
+    /* Hover do logo */
+    --logo-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* passa do ponto e volta */
+    position: relative; /* referência para o traço de marcador */
   }
 
   .header__logo-image {
-  block-size: 2.5rem;
-  inline-size: auto;
-  filter: invert();
-}
+    block-size: 2.5rem;
+    inline-size: auto;
+    filter: invert(1); /* tag preta → branca sobre o muro escuro */
+    transform-origin: 30% 70%; /* gira a partir da base, como um pulso */
+    transition:
+      transform var(--duration-base) var(--logo-ease-spring),
+      filter var(--duration-base) ease;
+  }
 
-  .header__logo:hover {
-    color: var(--color-text-muted);
+  /* Traço de marcador sob o logo (reutiliza o token --scribble) */
+  .header__logo::after {
+    content: "";
+    position: absolute;
+    inset-inline: -6%;
+    inset-block-end: -0.2rem;
+    block-size: 0.45rem;
+    background-color: var(--color-accent);
+    -webkit-mask: var(--scribble) no-repeat center / 100% 100%;
+    mask: var(--scribble) no-repeat center / 100% 100%;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 400ms var(--ease-out);
+    pointer-events: none;
+  }
+
+  /* Hover e foco por teclado: a tag é "pichada" de novo —
+     tremida de spray, inclinação com mola, sombra de tinta e traço */
+  .header__logo:hover .header__logo-image,
+  .header__logo:focus-visible .header__logo-image {
+    transform: rotate(-4deg) scale(1.08);
+    /* invert(1) é repetido: redeclarar filter substitui a lista inteira */
+    filter: invert(1) drop-shadow(3px 3px 0 rgb(255 255 255 / 0.3));
+    animation: logo-spray-shake 320ms steps(2, end);
+  }
+
+  .header__logo:hover::after,
+  .header__logo:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  /* Usa "translate" (e não "transform") para não anular a inclinação */
+  @keyframes logo-spray-shake {
+    0%   { translate: 0 0; }
+    25%  { translate: -1px 1px; }
+    50%  { translate: 1px -1px; }
+    75%  { translate: -1px 0; }
+    100% { translate: 0 0; }
   }
 
   /*
@@ -1370,8 +1414,13 @@
     background-image: none;
   }
 
+  .header__logo-image {
+    filter: none;
+  }
+
   .section__title::after,
-  .hero__role::after {
+  .hero__role::after,
+  .header__logo::after {
     background-color: CanvasText;
   }
 }
