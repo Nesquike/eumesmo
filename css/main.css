@@ -1,0 +1,1208 @@
+/* ==========================================================================
+   main.css — Portfólio
+   Arquitetura: camadas em cascata (@layer) inspiradas em ITCSS.
+   A ordem abaixo define a prioridade: camadas posteriores vencem as
+   anteriores, independentemente da especificidade dos seletores.
+   Cada bloco BEM vive isolado em "components" e pode ser extraído
+   para um arquivo próprio (ex.: ProjectCard.module.css) sem mudanças.
+   ========================================================================== */
+
+@layer reset, tokens, base, layout, components, utilities;
+
+
+/* ==========================================================================
+   RESET — normalização mínima e moderna
+   ========================================================================== */
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  img,
+  picture,
+  svg,
+  video {
+    display: block;
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  ul[class],
+  ol[class] {
+    list-style: none;
+    padding: 0;
+  }
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+  }
+
+  address {
+    font-style: normal;
+  }
+
+  figure {
+    margin: 0;
+  }
+}
+
+
+/* ==========================================================================
+   TOKENS — design tokens (fonte única de verdade para cores, espaços etc.)
+   Componentes consomem apenas tokens, nunca valores literais de cor.
+   ========================================================================== */
+@layer tokens {
+  :root {
+    color-scheme: light;
+
+    /* Cores — tema claro (contraste AA/AAA verificado contra --color-bg) */
+    --color-bg: #ffffff;
+    --color-surface: #f5f7fa;
+    --color-surface-raised: #ffffff;
+    --color-border: #dde3ea;
+    --color-text: #0f172a;
+    --color-text-muted: #475569;
+    --color-accent: #4338ca;
+    --color-accent-hover: #3730a3;
+    --color-accent-contrast: #ffffff;
+    --color-accent-soft: #eef0ff;
+    --color-danger: #b91c1c;
+    --color-success: #15803d;
+    --color-focus: #4338ca;
+
+    /* Tipografia */
+    --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+
+    --text-xs: 0.8125rem;
+    --text-sm: 0.9375rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+    --text-2xl: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+    --text-3xl: clamp(2.25rem, 1.6rem + 3vw, 4rem);
+
+    --leading-tight: 1.2;
+    --leading-normal: 1.6;
+
+    --weight-regular: 400;
+    --weight-medium: 500;
+    --weight-semibold: 600;
+    --weight-bold: 700;
+
+    /* Espaçamento (escala de 4px) */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 3rem;
+    --space-8: 4rem;
+    --space-section: clamp(4rem, 3rem + 5vw, 7rem);
+
+    /* Layout */
+    --container-max: 72rem;
+    --container-gutter: clamp(1rem, 0.5rem + 2.5vw, 2rem);
+    --header-height: 4rem;
+
+    /* Forma e profundidade */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1.25rem;
+    --radius-full: 999px;
+    --shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06), 0 1px 3px rgb(15 23 42 / 0.08);
+    --shadow-md: 0 4px 12px rgb(15 23 42 / 0.08), 0 2px 4px rgb(15 23 42 / 0.06);
+
+    /* Movimento */
+    --duration-fast: 150ms;
+    --duration-base: 250ms;
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* Camadas de empilhamento */
+    --z-header: 100;
+    --z-skip-link: 200;
+  }
+
+  /* Tema escuro: respeita a preferência do sistema operacional */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+
+      --color-bg: #0b1120;
+      --color-surface: #111a2e;
+      --color-surface-raised: #16213a;
+      --color-border: #24314d;
+      --color-text: #e2e8f0;
+      --color-text-muted: #9fb0c8;
+      --color-accent: #a5b4fc;
+      --color-accent-hover: #c7d2fe;
+      --color-accent-contrast: #0b1120;
+      --color-accent-soft: #1c2647;
+      --color-danger: #fca5a5;
+      --color-success: #86efac;
+      --color-focus: #a5b4fc;
+
+      --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+      --shadow-md: 0 6px 16px rgb(0 0 0 / 0.45);
+    }
+  }
+}
+
+
+/* ==========================================================================
+   BASE — estilos de elementos HTML puros (sem classes)
+   ========================================================================== */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Compensa o header fixo ao navegar por âncoras */
+    scroll-padding-block-start: calc(var(--header-height) + var(--space-4));
+  }
+
+  body {
+    min-block-size: 100vh;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: var(--leading-tight);
+    font-weight: var(--weight-bold);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: var(--color-accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  a:hover {
+    color: var(--color-accent-hover);
+  }
+
+  /* Foco visível e consistente apenas para navegação por teclado */
+  :focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* <main> recebe foco programático pelo skip link; não precisa de contorno */
+  main:focus {
+    outline: none;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-accent-contrast);
+  }
+}
+
+
+/* ==========================================================================
+   LAYOUT — estruturas genéricas reutilizadas por várias seções
+   ========================================================================== */
+@layer layout {
+  .section {
+    padding-block: var(--space-section);
+  }
+
+  /* Alterna o fundo das seções para criar ritmo visual */
+  .section:nth-of-type(even) {
+    background-color: var(--color-surface);
+  }
+
+  .section__container,
+  .header__container,
+  .hero__container,
+  .footer__container {
+    inline-size: 100%;
+    max-inline-size: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-gutter);
+  }
+
+  .section__header {
+    max-inline-size: 40rem;
+    margin-block-end: var(--space-7);
+  }
+
+  .section__title {
+    font-size: var(--text-2xl);
+    letter-spacing: -0.02em;
+  }
+
+  /* Detalhe decorativo sob o título da seção */
+  .section__title::after {
+    content: "";
+    display: block;
+    inline-size: 3rem;
+    block-size: 4px;
+    margin-block-start: var(--space-3);
+    border-radius: var(--radius-full);
+    background-color: var(--color-accent);
+  }
+
+  .section__subtitle {
+    margin-block-start: var(--space-4);
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+  }
+}
+
+
+/* ==========================================================================
+   COMPONENTS — um bloco BEM por seção abaixo
+   ========================================================================== */
+@layer components {
+
+  /* ------------------------------------------------------------------------
+     Skip link — invisível até receber foco via teclado
+     ------------------------------------------------------------------------ */
+  .skip-link {
+    position: absolute;
+    inset-block-start: var(--space-2);
+    inset-inline-start: var(--space-2);
+    z-index: var(--z-skip-link);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-accent);
+    color: var(--color-accent-contrast);
+    font-weight: var(--weight-semibold);
+    text-decoration: none;
+    transform: translateY(-200%);
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+
+  .skip-link:hover {
+    color: var(--color-accent-contrast);
+  }
+
+
+  /* ------------------------------------------------------------------------
+     Button — componente genérico (usado no Hero e no formulário)
+     ------------------------------------------------------------------------ */
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-block-size: 2.75rem; /* alvo de toque ≥ 44px (WCAG 2.5.5) */
+    padding: var(--space-3) var(--space-5);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    font-weight: var(--weight-semibold);
+    line-height: 1;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) ease,
+      border-color var(--duration-fast) ease,
+      color var(--duration-fast) ease,
+      transform var(--duration-fast) ease;
+  }
+
+  .button:active {
+    transform: translateY(1px);
+  }
+
+  .button--primary {
+    background-color: var(--color-accent);
+    color: var(--color-accent-contrast);
+  }
+
+  .button--primary:hover {
+    background-color: var(--color-accent-hover);
+    color: var(--color-accent-contrast);
+  }
+
+  .button--secondary {
+    border-color: var(--color-accent);
+    background-color: transparent;
+    color: var(--color-accent);
+  }
+
+  .button--secondary:hover {
+    background-color: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+
+
+  /* ------------------------------------------------------------------------
+     Header — fixo no topo, com fundo translúcido
+     ------------------------------------------------------------------------ */
+  .header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--z-header);
+    border-block-end: 1px solid var(--color-border);
+    background-color: color-mix(in srgb, var(--color-bg) 85%, transparent);
+    backdrop-filter: blur(10px);
+  }
+
+  .header__container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-4);
+    min-block-size: var(--header-height);
+  }
+
+  .header__logo {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2.75rem;
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    text-decoration: none;
+  }
+
+  .header__logo:hover {
+    color: var(--color-accent);
+  }
+
+  /*
+    Menu mobile com melhoria progressiva:
+    sem JS o botão fica oculto e a navegação permanece sempre visível.
+    Com JS, adicione a classe "has-js" ao <html> para ativar o menu recolhível
+    (o script deve alternar aria-expanded no botão).
+  */
+  .header__menu-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+  }
+
+  /* Ícone "hambúrguer" desenhado em CSS; vira um "X" quando expandido */
+  .header__menu-icon,
+  .header__menu-icon::before,
+  .header__menu-icon::after {
+    display: block;
+    inline-size: 1.25rem;
+    block-size: 2px;
+    border-radius: var(--radius-full);
+    background-color: currentColor;
+    transition: transform var(--duration-base) var(--ease-out),
+                background-color var(--duration-fast) ease;
+  }
+
+  .header__menu-icon {
+    position: relative;
+  }
+
+  .header__menu-icon::before,
+  .header__menu-icon::after {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+  }
+
+  .header__menu-icon::before { transform: translateY(-6px); }
+  .header__menu-icon::after  { transform: translateY(6px); }
+
+  .header__menu-toggle[aria-expanded="true"] .header__menu-icon {
+    background-color: transparent;
+  }
+
+  .header__menu-toggle[aria-expanded="true"] .header__menu-icon::before {
+    transform: rotate(45deg);
+  }
+
+  .header__menu-toggle[aria-expanded="true"] .header__menu-icon::after {
+    transform: rotate(-45deg);
+  }
+
+
+  /* ------------------------------------------------------------------------
+     Nav — navegação principal
+     ------------------------------------------------------------------------ */
+  .nav__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-2);
+  }
+
+  .nav__link {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2.75rem;
+    padding-inline: var(--space-3);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    text-decoration: none;
+    transition: color var(--duration-fast) ease, background-color var(--duration-fast) ease;
+  }
+
+  .nav__link:hover,
+  .nav__link[aria-current="true"],
+  .nav__link[aria-current="page"] {
+    color: var(--color-text);
+    background-color: var(--color-surface);
+  }
+
+  .nav__link--highlight {
+    border: 1px solid var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .nav__link--highlight:hover {
+    background-color: var(--color-accent);
+    color: var(--color-accent-contrast);
+  }
+
+  /* Comportamento mobile (apenas com JS ativo) */
+  @media (max-width: 47.99rem) {
+    .has-js .header__menu-toggle {
+      display: inline-flex;
+    }
+
+    .has-js .nav {
+      flex-basis: 100%;
+      display: none;
+      padding-block-end: var(--space-4);
+    }
+
+    .has-js .header__menu-toggle[aria-expanded="true"] + .nav {
+      display: block;
+    }
+
+    .has-js .nav__list {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .has-js .nav__link {
+      inline-size: 100%;
+    }
+  }
+
+
+  /* ------------------------------------------------------------------------
+     Hero — apresentação principal
+     ------------------------------------------------------------------------ */
+  .hero {
+    padding-block: var(--space-section);
+    background:
+      radial-gradient(60rem 30rem at 85% 0%, var(--color-accent-soft), transparent 70%),
+      var(--color-bg);
+  }
+
+  .hero__container {
+    display: grid;
+    align-items: center;
+    gap: var(--space-7);
+  }
+
+  .hero__greeting {
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    letter-spacing: 0.04em;
+  }
+
+  .hero__title {
+    margin-block-start: var(--space-3);
+  }
+
+  .hero__name {
+    display: block;
+    font-size: var(--text-3xl);
+    letter-spacing: -0.03em;
+  }
+
+  .hero__role {
+    display: block;
+    margin-block-start: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-semibold);
+  }
+
+  .hero__subtitle {
+    max-inline-size: 36rem;
+    margin-block-start: var(--space-5);
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block-start: var(--space-6);
+  }
+
+  .hero__media {
+    justify-self: center;
+    inline-size: min(100%, 20rem);
+  }
+
+  .hero__image {
+    inline-size: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border: 4px solid var(--color-surface-raised);
+    border-radius: 50%;
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-md), 0 0 0 8px var(--color-accent-soft);
+  }
+
+  @media (min-width: 48rem) {
+    .hero__container {
+      grid-template-columns: 1.4fr 1fr;
+    }
+
+    .hero__media {
+      justify-self: end;
+    }
+  }
+
+
+  /* ------------------------------------------------------------------------
+     About — biografia e destaques
+     ------------------------------------------------------------------------ */
+  .about__content {
+    display: grid;
+    gap: var(--space-7);
+  }
+
+  .about__text {
+    display: grid;
+    align-content: start;
+    gap: var(--space-4);
+    max-inline-size: 65ch; /* largura ideal de leitura */
+    font-size: var(--text-lg);
+  }
+
+  .about__highlights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: var(--space-4);
+    align-content: start;
+  }
+
+  .about__highlight {
+    display: flex;
+    flex-direction: column-reverse; /* valor em destaque acima do rótulo */
+    gap: var(--space-1);
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface-raised);
+  }
+
+  .about__highlight-label {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .about__highlight-value {
+    margin: 0;
+    color: var(--color-accent);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-bold);
+  }
+
+  @media (min-width: 64rem) {
+    .about__content {
+      grid-template-columns: 3fr 2fr;
+    }
+
+    .about__highlights {
+      grid-template-columns: 1fr;
+    }
+  }
+
+
+  /* ------------------------------------------------------------------------
+     Skills — categorias da tech stack
+     ------------------------------------------------------------------------ */
+  .skills__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: var(--space-5);
+  }
+
+  .skills__category {
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface-raised);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .skills__category-title {
+    margin-block-end: var(--space-4);
+    font-size: var(--text-lg);
+  }
+
+  .skills__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .skills__item {
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    background-color: var(--color-accent-soft);
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+  }
+
+
+  /* ------------------------------------------------------------------------
+     Projects — grid de cards
+     ------------------------------------------------------------------------ */
+  .projects__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+    gap: var(--space-6);
+  }
+
+  .projects__grid-item {
+    display: flex; /* faz os cards ocuparem a altura total da linha */
+  }
+
+
+  /* ------------------------------------------------------------------------
+     Project card — componente independente
+     ------------------------------------------------------------------------ */
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    inline-size: 100%;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface-raised);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--duration-base) var(--ease-out),
+                box-shadow var(--duration-base) var(--ease-out);
+  }
+
+  /* Eleva o card ao passar o mouse ou focar um de seus links */
+  .project-card:hover,
+  .project-card:focus-within {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .project-card__media {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background-color: var(--color-surface);
+  }
+
+  .project-card__image {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  .project-card:hover .project-card__image {
+    transform: scale(1.04);
+  }
+
+  .project-card__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+  }
+
+  .project-card__title {
+    font-size: var(--text-xl);
+  }
+
+  .project-card__description {
+    color: var(--color-text-muted);
+  }
+
+  .project-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-block-start: auto; /* fixa as tags na base do corpo */
+    padding-block-start: var(--space-2);
+  }
+
+  .project-card__footer {
+    display: flex;
+    gap: var(--space-2);
+    padding: var(--space-4) var(--space-5);
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .project-card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-block-size: 2.75rem;
+    padding-inline: var(--space-3);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    text-decoration: none;
+  }
+
+  .project-card__link:hover {
+    background-color: var(--color-accent-soft);
+  }
+
+  /* Seta indicando link externo (decorativa; o texto já informa "nova aba") */
+  .project-card__link::after {
+    content: "↗";
+    font-size: 0.9em;
+  }
+
+
+  /* ------------------------------------------------------------------------
+     Tag — rótulo genérico de tecnologia
+     ------------------------------------------------------------------------ */
+  .tag {
+    padding: 0.125rem var(--space-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+
+
+  /* ------------------------------------------------------------------------
+     Experience — agrupamento de timelines
+     ------------------------------------------------------------------------ */
+  .experience__groups {
+    display: grid;
+    gap: var(--space-7);
+  }
+
+  .experience__group-title {
+    margin-block-end: var(--space-5);
+    font-size: var(--text-xl);
+  }
+
+  @media (min-width: 64rem) {
+    .experience__groups {
+      grid-template-columns: 3fr 2fr;
+    }
+  }
+
+
+  /* ------------------------------------------------------------------------
+     Timeline — linha vertical com marcadores
+     ------------------------------------------------------------------------ */
+  .timeline {
+    --timeline-marker-size: 1rem;
+    --timeline-line-offset: calc(var(--timeline-marker-size) / 2 - 1px);
+
+    position: relative;
+    display: grid;
+    gap: var(--space-5);
+    padding-inline-start: var(--space-6);
+  }
+
+  /* Linha vertical contínua */
+  .timeline::before {
+    content: "";
+    position: absolute;
+    inset-block: var(--space-2);
+    inset-inline-start: var(--timeline-line-offset);
+    inline-size: 2px;
+    background-color: var(--color-border);
+  }
+
+  .timeline__item {
+    position: relative;
+  }
+
+  /* Marcador de cada item */
+  .timeline__item::before {
+    content: "";
+    position: absolute;
+    inset-block-start: var(--space-5);
+    inset-inline-start: calc(-1 * var(--space-6));
+    inline-size: var(--timeline-marker-size);
+    block-size: var(--timeline-marker-size);
+    border: 2px solid var(--color-accent);
+    border-radius: 50%;
+    background-color: var(--color-bg);
+  }
+
+  .timeline__item--current::before {
+    background-color: var(--color-accent);
+    box-shadow: 0 0 0 4px var(--color-accent-soft);
+  }
+
+  .timeline__card {
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface-raised);
+  }
+
+  .timeline__header {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .timeline__title {
+    font-size: var(--text-lg);
+  }
+
+  .timeline__organization {
+    font-weight: var(--weight-medium);
+  }
+
+  .timeline__period {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+
+  .timeline__achievements {
+    display: grid;
+    gap: var(--space-2);
+    margin-block-start: var(--space-4);
+  }
+
+  .timeline__achievement {
+    position: relative;
+    padding-inline-start: var(--space-4);
+    color: var(--color-text-muted);
+  }
+
+  .timeline__achievement::before {
+    content: "";
+    position: absolute;
+    inset-block-start: 0.65em;
+    inset-inline-start: 0;
+    inline-size: 6px;
+    block-size: 6px;
+    border-radius: 50%;
+    background-color: var(--color-accent);
+  }
+
+  .timeline__description {
+    margin-block-start: var(--space-3);
+    color: var(--color-text-muted);
+  }
+
+
+  /* ------------------------------------------------------------------------
+     Contact — layout da seção (formulário + aside)
+     ------------------------------------------------------------------------ */
+  .contact__content {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .contact__aside {
+    align-self: start;
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface-raised);
+  }
+
+  .contact__aside-title {
+    margin-block-end: var(--space-4);
+    font-size: var(--text-lg);
+  }
+
+  .contact__links {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .contact__link {
+    display: flex;
+    align-items: center;
+    min-block-size: 2.75rem;
+    padding-inline: var(--space-3);
+    border-radius: var(--radius-sm);
+    font-weight: var(--weight-medium);
+    text-decoration: none;
+    word-break: break-word;
+  }
+
+  .contact__link:hover {
+    background-color: var(--color-accent-soft);
+  }
+
+  @media (min-width: 56rem) {
+    .contact__content {
+      grid-template-columns: 2fr 1fr;
+    }
+  }
+
+
+  /* ------------------------------------------------------------------------
+     Contact form — componente de formulário
+     ------------------------------------------------------------------------ */
+  .contact-form {
+    display: grid;
+    gap: var(--space-5);
+    padding: clamp(var(--space-5), 4vw, var(--space-6));
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface-raised);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .contact-form__title {
+    font-size: var(--text-xl);
+  }
+
+  .contact-form__hint {
+    margin-block-start: calc(-1 * var(--space-3));
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .contact-form__field {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .contact-form__label {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+  }
+
+  .contact-form__input {
+    inline-size: 100%;
+    min-block-size: 2.75rem;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg);
+    transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+  }
+
+  .contact-form__input:hover {
+    border-color: var(--color-text-muted);
+  }
+
+  .contact-form__input:focus-visible {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 35%, transparent);
+  }
+
+  .contact-form__input--textarea {
+    min-block-size: 9rem;
+    resize: vertical;
+  }
+
+  /* Estado de erro: o JS deve definir aria-invalid="true" no campo */
+  .contact-form__input[aria-invalid="true"] {
+    border-color: var(--color-danger);
+  }
+
+  .contact-form__error {
+    color: var(--color-danger);
+    font-size: var(--text-sm);
+  }
+
+  .contact-form__error:empty,
+  .contact-form__status:empty {
+    display: none;
+  }
+
+  .contact-form__submit {
+    justify-self: start;
+  }
+
+  .contact-form__status {
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    background-color: var(--color-accent-soft);
+    font-weight: var(--weight-medium);
+  }
+
+  /* Modificadores aplicados pelo JS após o envio */
+  .contact-form__status--success {
+    color: var(--color-success);
+  }
+
+  .contact-form__status--error {
+    color: var(--color-danger);
+  }
+
+
+  /* ------------------------------------------------------------------------
+     Footer — direitos autorais e redes sociais
+     ------------------------------------------------------------------------ */
+  .footer {
+    padding-block: var(--space-6);
+    border-block-start: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+  }
+
+  .footer__container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .footer__copyright {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .footer__social-list {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .footer__social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    border-radius: var(--radius-full);
+    color: var(--color-text-muted);
+    transition: color var(--duration-fast) ease, background-color var(--duration-fast) ease;
+  }
+
+  .footer__social-link:hover {
+    background-color: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+
+  .footer__social-icon {
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+  }
+
+  .footer__back-to-top {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2.75rem;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+  }
+}
+
+
+/* ==========================================================================
+   UTILITIES — classes de propósito único (vencem qualquer componente)
+   ========================================================================== */
+@layer utilities {
+  /* Esconde visualmente, mas mantém o conteúdo para leitores de tela */
+  .visually-hidden {
+    position: absolute !important;
+    inline-size: 1px !important;
+    block-size: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+}
+
+
+/* ==========================================================================
+   PREFERÊNCIAS DO USUÁRIO — fora das camadas para prevalecer sempre
+   ========================================================================== */
+
+/* Desativa animações para quem prefere movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Modo de alto contraste do Windows: garante bordas e foco visíveis */
+@media (forced-colors: active) {
+  .button,
+  .project-card,
+  .skills__category,
+  .timeline__card,
+  .contact-form__input {
+    border: 1px solid CanvasText;
+  }
+
+  .timeline__item::before,
+  .section__title::after {
+    background-color: CanvasText;
+  }
+}
