@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Portfólio de Seu Nome, Software Engineer. Projetos, experiência profissional, tech stack e contato.">
   <meta name="author" content="Seu Nome">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="theme-color" content="#0a0a0a">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="Seu Nome | Software Engineer">
@@ -16,6 +16,16 @@
   <title>Seu Nome | Software Engineer</title>
 
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+
+  <!-- Fontes: Archivo (grotesca de títulos e texto) + Space Mono (rótulos) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Space+Mono:wght@400;700&display=swap">
+
+  <!-- Pré-carrega a textura do Hero (imagem acima da dobra) conforme a largura da tela -->
+  <link rel="preload" as="image" href="assets/images/grunge-wall-900.webp" type="image/webp" media="(max-width: 47.99rem)">
+  <link rel="preload" as="image" href="assets/images/grunge-wall.webp" type="image/webp" media="(min-width: 48rem)">
+
   <link rel="stylesheet" href="css/main.css">
 </head>
 
@@ -28,7 +38,8 @@
        COMPONENTE: Header
        Logo à esquerda + navegação principal à direita
        ============================================================ -->
-  <header class="header" id="top">
+  <!-- data-theme="inverse": texto claro sobre a textura escura do muro -->
+  <header class="header" id="top" data-theme="inverse">
     <div class="header__container">
       <a class="header__logo" href="#top" aria-label="Seu Nome — voltar ao início">
         <span class="header__logo-text" aria-hidden="true">&lt;SN /&gt;</span>
@@ -63,7 +74,7 @@
          COMPONENTE: Hero
          Apresentação principal — contém o único <h1> da página
          ============================================================ -->
-    <section class="hero" aria-labelledby="hero-title">
+    <section class="hero" aria-labelledby="hero-title" data-theme="inverse">
       <div class="hero__container">
         <div class="hero__content">
           <p class="hero__greeting">Olá, eu sou</p>
@@ -87,16 +98,6 @@
             </a>
           </div>
         </div>
-
-        <figure class="hero__media">
-          <img
-            class="hero__image"
-            src="assets/images/profile.webp"
-            alt="Foto de Seu Nome sorrindo, em ambiente de trabalho"
-            width="400"
-            height="400"
-            fetchpriority="high">
-        </figure>
       </div>
     </section>
 
@@ -111,32 +112,45 @@
         </header>
 
         <div class="about__content">
-          <div class="about__text">
-            <p class="about__paragraph">
-              Sou Engenheiro de Software com X anos de experiência no desenvolvimento
-              de aplicações web, atuando do front-end ao back-end.
-            </p>
-            <p class="about__paragraph">
-              Tenho interesse especial em arquitetura de software, boas práticas de
-              Clean Code e acessibilidade digital.
-            </p>
-          </div>
+          <!-- Foto de perfil -->
+          <figure class="about__media">
+            <img
+              class="about__image"
+              src="assets/images/profile.webp"
+              alt="Foto de Seu Nome sorrindo, em ambiente de trabalho"
+              width="480"
+              height="600"
+              loading="lazy">
+          </figure>
 
-          <!-- Destaques numéricos em lista de definição (rótulo/valor) -->
-          <dl class="about__highlights">
-            <div class="about__highlight">
-              <dt class="about__highlight-label">Anos de experiência</dt>
-              <dd class="about__highlight-value">X+</dd>
+          <div class="about__body">
+            <div class="about__text">
+              <p class="about__paragraph">
+                Sou Engenheiro de Software com X anos de experiência no desenvolvimento
+                de aplicações web, atuando do front-end ao back-end.
+              </p>
+              <p class="about__paragraph">
+                Tenho interesse especial em arquitetura de software, boas práticas de
+                Clean Code e acessibilidade digital.
+              </p>
             </div>
-            <div class="about__highlight">
-              <dt class="about__highlight-label">Projetos entregues</dt>
-              <dd class="about__highlight-value">XX+</dd>
-            </div>
-            <div class="about__highlight">
-              <dt class="about__highlight-label">Localização</dt>
-              <dd class="about__highlight-value">Cidade, Brasil</dd>
-            </div>
-          </dl>
+
+            <!-- Destaques numéricos em lista de definição (rótulo/valor) -->
+            <dl class="about__highlights">
+              <div class="about__highlight">
+                <dt class="about__highlight-label">Anos de experiência</dt>
+                <dd class="about__highlight-value">X+</dd>
+              </div>
+              <div class="about__highlight">
+                <dt class="about__highlight-label">Projetos entregues</dt>
+                <dd class="about__highlight-value">XX+</dd>
+              </div>
+              <div class="about__highlight">
+                <dt class="about__highlight-label">Localização</dt>
+                <dd class="about__highlight-value">Cidade, Brasil</dd>
+              </div>
+            </dl>
+          </div>
         </div>
       </div>
     </section>
@@ -536,7 +550,7 @@
        COMPONENTE: Footer
        Direitos autorais + ícones de redes sociais
        ============================================================ -->
-  <footer class="footer">
+  <footer class="footer" data-theme="inverse">
     <div class="footer__container">
       <p class="footer__copyright">
         &copy; <time datetime="2026">2026</time> Seu Nome. Todos os direitos reservados.
