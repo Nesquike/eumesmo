@@ -496,6 +496,12 @@
     text-decoration: none;
   }
 
+  .header__logo-image {
+  block-size: 2.5rem;
+  inline-size: auto;
+  filter: invert();
+}
+
   .header__logo:hover {
     color: var(--color-text-muted);
   }
@@ -761,7 +767,7 @@
     aspect-ratio: 4 / 5;
     object-fit: cover;
     background-color: var(--color-surface);
-    filter: grayscale(1) contrast(1.08);
+    filter: grayscale(0.6) contrast(1.08);
   }
 
   .about__body {
