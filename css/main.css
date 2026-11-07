@@ -12,6 +12,13 @@
 
 @layer reset, tokens, base, layout, components, utilities;
 
+/* Custom property tipada: permite transicionar o raio da lupa (photo-lens) */
+@property --lens-size {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
 
 /* ==========================================================================
    RESET — normalização mínima e moderna
@@ -817,6 +824,90 @@
   .about__body {
     display: grid;
     gap: var(--space-6);
+  }
+
+
+  /* ------------------------------------------------------------------------
+     Photo lens — lupa circular sobre uma foto (combinar com [data-photo-lens])
+     Mostra a imagem ampliada e SEM filtros dentro do círculo.
+     Posição e medidas chegam do JS via custom properties:
+     --lens-x/y (cursor, coordenadas da foto), --lens-offset-x/y e
+     --lens-width/height (posição e tamanho da foto dentro do bloco).
+     ------------------------------------------------------------------------ */
+  .photo-lens {
+    --lens-radius: 4.5rem; /* raio do círculo na tela */
+    --lens-zoom: 2;        /* ampliação dentro do círculo */
+    --lens-x: 0px;
+    --lens-y: 0px;
+    --lens-offset-x: 0px;
+    --lens-offset-y: 0px;
+
+    transition: rotate var(--duration-base) var(--ease-out);
+  }
+
+  /* A moldura "desentorta" enquanto a foto é inspecionada */
+  .photo-lens.is-lens-active {
+    rotate: 0deg;
+  }
+
+  .photo-lens.is-lens-active img {
+    cursor: none; /* o anel da lupa substitui o cursor */
+  }
+
+  /* Janela do tamanho da foto: impede o zoom de vazar sobre a moldura */
+  .photo-lens__viewport {
+    position: absolute;
+    inset-block-start: var(--lens-offset-y);
+    inset-inline-start: var(--lens-offset-x);
+    inline-size: var(--lens-width);
+    block-size: var(--lens-height);
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  /* Camada ampliada: cópia sem filtro, recortada em círculo no cursor.
+     transform-origin no cursor mantém o ponto sob o mouse no lugar;
+     o recorte é dividido pelo zoom porque a escala também o amplia. */
+  .photo-lens__zoom {
+    inline-size: 100%;
+    block-size: 100%;
+    max-inline-size: none;
+    object-fit: cover;
+    pointer-events: none;
+    transform-origin: var(--lens-x) var(--lens-y);
+    scale: var(--lens-zoom);
+    clip-path: circle(calc(var(--lens-size) / var(--lens-zoom)) at var(--lens-x) var(--lens-y));
+    transition: --lens-size var(--duration-base) var(--ease-out);
+  }
+
+  /* Anel da lupa (contorno branco + sombra carimbada, no estilo do site) */
+  .photo-lens::after {
+    content: "";
+    position: absolute;
+    inset-block-start: calc(var(--lens-offset-y) + var(--lens-y));
+    inset-inline-start: calc(var(--lens-offset-x) + var(--lens-x));
+    z-index: 2;
+    inline-size: calc(var(--lens-size) * 2);
+    block-size: calc(var(--lens-size) * 2);
+    border: 2px solid var(--gray-0);
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--gray-950), 4px 4px 0 2px var(--gray-950);
+    opacity: 0;
+    pointer-events: none;
+    translate: -50% -50%;
+    transition:
+      --lens-size var(--duration-base) var(--ease-out),
+      opacity var(--duration-fast) ease;
+  }
+
+  /* O círculo "abre" ao entrar e "fecha" ao sair (anima só o raio) */
+  .photo-lens.is-lens-active .photo-lens__zoom,
+  .photo-lens.is-lens-active::after {
+    --lens-size: var(--lens-radius);
+  }
+
+  .photo-lens.is-lens-active::after {
+    opacity: 1;
   }
 
   .about__text {
