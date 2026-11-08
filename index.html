@@ -457,8 +457,14 @@
         </header>
 
         <div class="contact__content">
-          <!-- Formulário: cada campo com <label> associado e autocomplete -->
-          <form class="contact-form" action="#" method="post" aria-labelledby="contact-form-title" novalidate>
+          <!-- Formulário: enviado ao Formspree. Com JS (data-contact-form), valida
+               e envia sem sair da página; sem JS, envia normalmente pelo action. -->
+          <form
+            class="contact-form"
+            action="https://formspree.io/f/mwlldkpo"
+            method="post"
+            aria-labelledby="contact-form-title"
+            data-contact-form>
             <h3 class="contact-form__title" id="contact-form-title">Envie uma mensagem</h3>
             <p class="contact-form__hint" id="contact-form-hint">Campos marcados com * são obrigatórios.</p>
 
@@ -471,7 +477,8 @@
                 name="name"
                 autocomplete="name"
                 required
-                aria-describedby="contact-form-hint">
+                aria-describedby="contact-form-hint contact-name-error">
+              <p class="contact-form__error" id="contact-name-error" aria-live="polite"></p>
             </div>
 
             <div class="contact-form__field">
@@ -505,8 +512,18 @@
                 name="message"
                 rows="6"
                 required
-                aria-describedby="contact-form-hint"></textarea>
+                aria-describedby="contact-form-hint contact-message-error"></textarea>
+              <p class="contact-form__error" id="contact-message-error" aria-live="polite"></p>
             </div>
+
+            <!-- Armadilha anti-spam: invisível para pessoas; robôs costumam preencher -->
+            <input
+              class="contact-form__honeypot"
+              type="text"
+              name="_gotcha"
+              tabindex="-1"
+              autocomplete="off"
+              aria-hidden="true">
 
             <button class="button button--primary contact-form__submit" type="submit">
               Enviar mensagem
