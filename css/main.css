@@ -1430,6 +1430,17 @@
     justify-self: start;
   }
 
+  /* Campo-armadilha anti-spam: nunca exibido */
+  .contact-form__honeypot {
+    display: none;
+  }
+
+  /* Botão travado durante o envio (aria-disabled mantém o foco nele) */
+  .contact-form__submit[aria-disabled="true"] {
+    cursor: progress;
+    opacity: 0.7;
+  }
+
   .contact-form__status {
     padding: var(--space-3) var(--space-4);
     border: 1px dashed var(--color-border-strong);

@@ -76,3 +76,97 @@
     return viewport;
   }
 })();
+
+
+/* --------------------------------------------------------------------------
+   Componente: Contact Form
+   Valida os campos com mensagens acessíveis e envia via fetch (Formspree),
+   sem sair da página. Hook: [data-contact-form]. Sem JS, o formulário
+   envia normalmente pelo atributo action.
+   -------------------------------------------------------------------------- */
+(function contactForm() {
+  'use strict';
+
+  const form = document.querySelector('[data-contact-form]');
+  if (!form) return;
+
+  const status = form.querySelector('.contact-form__status');
+  const submitButton = form.querySelector('[type="submit"]');
+  const fields = [...form.elements].filter((element) => element.willValidate);
+
+  const ERROR_MESSAGES = {
+    valueMissing: 'Este campo é obrigatório.',
+    typeMismatch: 'Digite um e-mail válido, como nome@exemplo.com.',
+  };
+
+  let isSending = false;
+
+  /* Com JS ativo, a validação passa a ser nossa (mensagens em português) */
+  form.noValidate = true;
+
+  /* Erro de cada campo fica em #<id-do-campo>-error */
+  function validateField(field) {
+    const error = document.getElementById(`${field.id}-error`);
+    const isValid = field.checkValidity();
+
+    if (isValid) {
+      field.removeAttribute('aria-invalid');
+    } else {
+      field.setAttribute('aria-invalid', 'true');
+    }
+
+    if (error) {
+      const reason = Object.keys(ERROR_MESSAGES).find((key) => field.validity[key]);
+      error.textContent = isValid ? '' : ERROR_MESSAGES[reason] || field.validationMessage;
+    }
+
+    return isValid;
+  }
+
+  function setStatus(message, type) {
+    status.textContent = message;
+    status.classList.toggle('contact-form__status--success', type === 'success');
+    status.classList.toggle('contact-form__status--error', type === 'error');
+  }
+
+  /* Revalida enquanto a pessoa corrige um campo já marcado como inválido */
+  form.addEventListener('input', (event) => {
+    if (event.target.getAttribute('aria-invalid') === 'true') {
+      validateField(event.target);
+    }
+  });
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (isSending) return;
+
+    const invalidFields = fields.filter((field) => !validateField(field));
+    if (invalidFields.length > 0) {
+      setStatus('Revise os campos destacados.', 'error');
+      invalidFields[0].focus();
+      return;
+    }
+
+    isSending = true;
+    submitButton.setAttribute('aria-disabled', 'true'); // não usa disabled para manter o foco
+    setStatus('Enviando…');
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      form.reset();
+      setStatus('Mensagem enviada! Respondo em breve.', 'success');
+    } catch {
+      setStatus('Não foi possível enviar agora. Tente de novo ou me chame por e-mail.', 'error');
+    } finally {
+      isSending = false;
+      submitButton.removeAttribute('aria-disabled');
+    }
+  });
+})();
