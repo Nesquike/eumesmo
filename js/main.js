@@ -170,3 +170,59 @@
     }
   });
 })();
+
+
+/* --------------------------------------------------------------------------
+   Componente: Theme Toggle
+   Chave claro/escuro. Grava a escolha em data-theme no <html> (lido pelo CSS)
+   e no localStorage. Sem escolha salva, acompanha o tema do sistema.
+   Hook: [data-theme-toggle] (role="switch"; aria-checked="true" = escuro).
+   -------------------------------------------------------------------------- */
+(function themeToggle() {
+  'use strict';
+
+  const toggle = document.querySelector('[data-theme-toggle]');
+  if (!toggle) return;
+
+  const root = document.documentElement;
+  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function readSavedTheme() {
+    try {
+      return localStorage.getItem('theme');
+    } catch {
+      return null; // modo privado / armazenamento bloqueado
+    }
+  }
+
+  function saveTheme(theme) {
+    try {
+      localStorage.setItem('theme', theme);
+    } catch {
+      /* sem persistência: a escolha vale só nesta visita */
+    }
+  }
+
+  function currentTheme() {
+    return root.dataset.theme || (systemPrefersDark.matches ? 'dark' : 'light');
+  }
+
+  function syncToggle() {
+    toggle.setAttribute('aria-checked', String(currentTheme() === 'dark'));
+  }
+
+  toggle.addEventListener('click', () => {
+    const nextTheme = currentTheme() === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = nextTheme;
+    saveTheme(nextTheme);
+    syncToggle();
+  });
+
+  /* Se a pessoa nunca escolheu, a chave acompanha mudanças do sistema */
+  systemPrefersDark.addEventListener('change', () => {
+    if (!readSavedTheme()) syncToggle();
+  });
+
+  syncToggle();
+  toggle.hidden = false; // só aparece quando funciona
+})();
